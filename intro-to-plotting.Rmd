@@ -1,0 +1,135 @@
+---
+title: "Intro-to-plotting"
+output: html_document
+date: "2024-10-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+
+```
+
+Welcome to R markdown! We will be using this to run R and make figures. Some quick tips. You're reading this in the coding window. Like jupyter notebooks, code is written in chunks, but unlike jupyter, there is text written in markdown outside the chunks (like here).
+
+If you're in Rstudio, you'll execute code in the chunk by clicking the sideways triangle at the top right corner of the chunk. You can also run code line by line by by hitting the ctrl and enter keys at the same time while your cursor is in the line you want to run. 
+
+Code outputs are printed in the Console window, below this one.
+
+First, load in the data with the read.table() function. If you run into issues, you can also use the "Import dataset" tool in the File menu to do this through the Rstudio GUI.
+
+```{r}
+penguins = read.table('/mnt/research/PLB812_FS24_S001/Intro-to-Plots/penguins.txt', header=T)
+
+```
+
+Now we have loaded a dataset about penguins. You can use the head() or str() function to look at your data. Try both.
+
+```{r}
+head(penguins)
+str(penguins)
+```
+
+We'll use ggplot to make some plots. Note that there is code to load the ggplot module in the first chunk of the Rmarkdown file.
+
+First research question: How much does flipper length vary in our penguin dataset?
+
+
+Here is some code we can use to make a histogram:
+```{r}
+ggplot(penguins, aes(x=flipper_length_mm)) + #information about the dataset
+geom_histogram(binwidth=1) #the type of plot we want to make
+```
+
+Note that in the geom_histogram() function, we set the width of the histogram bins as 1. Try editing the code to adjust the width of the histogram bins. Keep the code with the bin width that you think is 'best'.
+
+This graph is kind of ugly. One of the fun parts of making plots is that you can customize many aspects of the plot. Here is the code updated to provide axis labels and change the colors. There is a whole world of color palettes in R for you to explore. My favorite is https://github.com/johannesbjork/LaCroixColoR
+
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm)) + #information about the dataset
+  geom_histogram(binwidth=1, color = "white", fill="navy") + #make the figure
+  labs(x = "Flipper Length (mm)", y = "Frequency") + #add labels
+theme_minimal() #get rid of the default gray background
+
+```
+
+This dataset contains information about species as well. Do flipper lengths differ by species? One big advantage of ggplot is that it makes coloring data by type very easy.
+
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, fill = species)) +
+  geom_histogram(colour = "black")
+
+```
+
+However, collapsing a histogram together can be hard to interpret. Lets make a density plot instead. Now, instead of geom_histogram, we'll use geom_density()
+
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, fill = species)) +
+  geom_density(alpha = 0.5) #the alpha affects transparency
+```
+
+Histograms are great for looking at one kind of data. But what if we want to learn about the relationship between two types of data, like how bill length relates to bill depth? To do this, we'll make some scatterplots using geom_point()
+
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point() +
+  theme_minimal()
+```
+
+As before, we might want to look at differences between species. Here is code below to do that.
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  theme_minimal()
+```
+
+You can also change visual aspects of this plot. See the code below.
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  theme_minimal()
+  scale_colour_manual(values = c("blue", "red", "purple")) + #change the color
+geom_point(size = 2) #change the size 
+
+
+```
+
+
+Now that you've worked through the tutorial, here are some homework questions.
+
+1A) Make a histogram of body mass (body_mass_g). Choose the colors and labels that you like best
+
+```{r}
+
+```
+
+1B) Make density plot that compares body mass across different species.
+
+```{r}
+
+```
+
+2A) Create a scatterplot of bill depth (x) and flipper length (y) colored by species.
+
+```{r}
+
+```
+
+2B) What happens when you color the data points by body mass (body_mass_g) instead of species?
+
+```{r}
+
+
+```
+
+
+More resources:
+
+This tutorial was adopted from Susan Johnston's ggplot tutorial here: https://susjoh.shinyapps.io/MSc_Data_Visualisation/
+
+Check it out if you want to learn more about making plots.
+
+Clause Wilke's book is another great resource: https://clauswilke.com/dataviz/
